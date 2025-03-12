@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comic Collection Database</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3a3d;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        /* Search box styling */
+        #search {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            margin: 20px auto;
+            border-radius: 25px;
+            border: 2px solid #d1d1d1;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #search:focus {
+            border-color: #607d8b;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            max-width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #00796b;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        th:hover {
+            background-color: #004d40;
+        }
+
+        td {
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        td:last-child {
+            border-bottom: none;
+        }
+
+        /* Row hover effect */
+        tr:hover td {
+            background-color: #f1f8e9;
+        }
+
+        /* Responsive table */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr {
+                border: 1px solid #ddd;
+                margin-bottom: 15px;
+            }
+
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                font-weight: bold;
+                color: #00796b;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Comic Collection Database</h1>
+    <input type="text" id="search" onkeyup="searchTable()" placeholder="Search for comics...">
+    <table id="comicTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Manufacturer</th>
+                <th onclick="sortTable(1)">Series</th>
+                <th onclick="sortTable(2)">Issue Number</th>
+                <th onclick="sortTable(3)">Year</th>
+                <th onclick="sortTable(4)">Grade</th>
+                <th onclick="sortTable(5)">Quantity</th>
+                <th onclick="sortTable(6)">Value</th>
+                <th onclick="sortTable(7)">Total Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <script>
+                let comics = [
+                    {"Manufacturer": "DC", "Series": "The Brave and the Bold", "Issue Number": 123, "Year": 1975, "Grade": "", "Quantity": 1, "Value": "$150", "Total Value": "$150"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 13, "Year": 1978, "Grade": "", "Quantity": 1, "Value": "$70", "Total Value": "$70"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 157, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$120", "Total Value": "$120"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 158, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$100", "Total Value": "$100"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 159, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$170", "Total Value": "$170"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 191, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$65", "Total Value": "$65"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 207, "Year": 1980, "Grade": "", "Quantity": 1, "Value": "$200", "Total Value": "$200"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 156, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$250", "Total Value": "$250"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man Annual", "Issue Number": 10, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$250", "Total Value": "$250"}, 
+{"Manufacturer": "Marvel", "Series": "\"Peter Parker", "Issue Number": null, "Year": 24, "Grade": "1978", "Quantity": 0, "Value": "1", "Total Value": "$50"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 168, "Year": 1977, "Grade": "", "Quantity": 1, "Value": "$65", "Total Value": "$65"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spider-Man", "Issue Number": 203, "Year": 1980, "Grade": "", "Quantity": 1, "Value": "$75", "Total Value": "$75"}, 
+{"Manufacturer": "Marvel", "Series": "\"Peter Parker", "Issue Number": null, "Year": 25, "Grade": "1978", "Quantity": 0, "Value": "1", "Total Value": "$50"}, 
+{"Manufacturer": "Marvel", "Series": "\"Peter Parker", "Issue Number": null, "Year": 19, "Grade": "1978", "Quantity": 0, "Value": "1", "Total Value": "$50"}, 
+{"Manufacturer": "Marvel", "Series": "\"Peter Parker", "Issue Number": null, "Year": 21, "Grade": "1978", "Quantity": 0, "Value": "1", "Total Value": "$70"}, 
+{"Manufacturer": "Marvel", "Series": "Dardevil - Newstand", "Issue Number": 181, "Year": 1982, "Grade": "", "Quantity": 2, "Value": "$100", "Total Value": "$200"}, 
+{"Manufacturer": "Marvel", "Series": "Daredevil", "Issue Number": 181, "Year": 1982, "Grade": "", "Quantity": 1, "Value": "$85", "Total Value": "$85"}, 
+{"Manufacturer": "DC", "Series": "World's Finest", "Issue Number": 240, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$35", "Total Value": "$35"}, 
+{"Manufacturer": "DC", "Series": "World's Finest", "Issue Number": 238, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$38", "Total Value": "$38"}, 
+{"Manufacturer": "DC", "Series": "The New Teen Titans", "Issue Number": 15, "Year": 1982, "Grade": "", "Quantity": 83, "Value": "$40", "Total Value": "\"$3"}, 
+{"Manufacturer": "Marvel", "Series": "The Uncanny X-Men", "Issue Number": 155, "Year": 1982, "Grade": "", "Quantity": 4, "Value": "$44", "Total Value": "$176"}, 
+{"Manufacturer": "", "Series": "", "Issue Number": null, "Year": null, "Grade": "", "Quantity": 0, "Value": "", "Total Value": "$0"}, 
+{"Manufacturer": "DC", "Series": "Action Comics", "Issue Number": 463, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$109", "Total Value": "$109"}, 
+{"Manufacturer": "DC", "Series": "Action Comics", "Issue Number": 465, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$270", "Total Value": "$270"}, 
+{"Manufacturer": "DC", "Series": "Action Comics", "Issue Number": 471, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$270", "Total Value": "$270"}, 
+{"Manufacturer": "Marvel", "Series": "Moon Knight", "Issue Number": 23, "Year": 1982, "Grade": "", "Quantity": 1, "Value": "$120", "Total Value": "$120"}, 
+{"Manufacturer": "Marvel", "Series": "Mavel Team Up Spider Man and Black Panther", "Issue Number": 87, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$75", "Total Value": "$75"}, 
+{"Manufacturer": "Marvel", "Series": "Marvel Team Up ", "Issue Number": 85, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$35", "Total Value": "$35"}, 
+{"Manufacturer": "DC", "Series": "DC Comic Presents", "Issue Number": 1, "Year": 1978, "Grade": "", "Quantity": 1, "Value": "$140", "Total Value": "$140"}, 
+{"Manufacturer": "DC", "Series": "DC Comic Presents", "Issue Number": 17, "Year": 1980, "Grade": "", "Quantity": 1, "Value": "$50", "Total Value": "$50"}, 
+{"Manufacturer": "Marvel", "Series": "Star Trek", "Issue Number": 1, "Year": 1980, "Grade": "", "Quantity": 3, "Value": "$100", "Total Value": "$300"}, 
+{"Manufacturer": "Marvel", "Series": "Star Trek", "Issue Number": 3, "Year": 1980, "Grade": "", "Quantity": 3, "Value": "$180", "Total Value": "$540"}, 
+{"Manufacturer": "Marvel", "Series": "Star Trek", "Issue Number": 2, "Year": 1980, "Grade": "", "Quantity": 6, "Value": "$130", "Total Value": "$780"}, 
+{"Manufacturer": "Marvel", "Series": "Spiderman", "Issue Number": 15, "Year": 1991, "Grade": "", "Quantity": 1, "Value": "$40", "Total Value": "$40"}, 
+{"Manufacturer": "Marvel", "Series": "Fantasy Masterpieces", "Issue Number": 2, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$150", "Total Value": "$150"}, 
+{"Manufacturer": "Marvel", "Series": "World's Finest", "Issue Number": 209, "Year": 1972, "Grade": "", "Quantity": 1, "Value": "$419", "Total Value": "$419"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spiderman", "Issue Number": 218, "Year": 1981, "Grade": "", "Quantity": 1, "Value": "\"$3", "Total Value": "000\""}, 
+{"Manufacturer": "DC", "Series": "Superman", "Issue Number": 309, "Year": 1977, "Grade": "", "Quantity": 1, "Value": "$100", "Total Value": "$100"}, 
+{"Manufacturer": "Marvel", "Series": "The Amazing Spiderman", "Issue Number": 220, "Year": 1981, "Grade": "", "Quantity": 1, "Value": "$150", "Total Value": "$150"}, 
+{"Manufacturer": "Marvel", "Series": "King Size Annual - Star Wars", "Issue Number": 1, "Year": 1979, "Grade": "", "Quantity": 3, "Value": "$100", "Total Value": "$300"}, 
+{"Manufacturer": "DC", "Series": "Superman", "Issue Number": 305, "Year": 1977, "Grade": "", "Quantity": 1, "Value": "$55", "Total Value": "$55"}, 
+{"Manufacturer": "Marvel", "Series": "Captain America", "Issue Number": 400, "Year": 1992, "Grade": "", "Quantity": 1, "Value": "$60", "Total Value": "$60"}, 
+{"Manufacturer": "Marvel", "Series": "Star Wars", "Issue Number": 39, "Year": 1980, "Grade": "", "Quantity": 10, "Value": "$160", "Total Value": "\"$1"}, 
+{"Manufacturer": "DC", "Series": "Superman", "Issue Number": 236, "Year": 1971, "Grade": "", "Quantity": 1, "Value": "$700", "Total Value": "$700"}, 
+{"Manufacturer": "Marvel", "Series": "Star Wars", "Issue Number": 37, "Year": 1980, "Grade": "", "Quantity": 1, "Value": "$100", "Total Value": "$100"}, 
+{"Manufacturer": "DC", "Series": "Superman", "Issue Number": 303, "Year": 1976, "Grade": "", "Quantity": 1, "Value": "$355", "Total Value": "$355"}, 
+{"Manufacturer": "Marvel", "Series": "Star Wars", "Issue Number": 3, "Year": 1977, "Grade": "", "Quantity": 1, "Value": "$277", "Total Value": "$277"}, 
+{"Manufacturer": "Marvel", "Series": "Star Wars", "Issue Number": 8, "Year": 1978, "Grade": "", "Quantity": 1, "Value": "$220", "Total Value": "$220"}, 
+{"Manufacturer": "Marvel", "Series": "Star Wars", "Issue Number": 10, "Year": 1978, "Grade": "", "Quantity": 1, "Value": "$170", "Total Value": "$170"}, 
+{"Manufacturer": "Marvel", "Series": "Marvel Team Up ", "Issue Number": 88, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$50", "Total Value": "$50"}, 
+{"Manufacturer": "DC", "Series": "Superman", "Issue Number": 315, "Year": 1977, "Grade": "", "Quantity": 1, "Value": "$110", "Total Value": "$110"}, 
+{"Manufacturer": "Marvel", "Series": "Star Wars", "Issue Number": 41, "Year": 1980, "Grade": "", "Quantity": 1, "Value": "$290", "Total Value": "$290"}, 
+{"Manufacturer": "Marvel", "Series": "Star Wars", "Issue Number": 1, "Year": 1977, "Grade": "", "Quantity": 1, "Value": "\"$2", "Total Value": "700\""}, 
+{"Manufacturer": "Marvel", "Series": "Marvel Team Up", "Issue Number": 81, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$240", "Total Value": "$240"}, 
+{"Manufacturer": "Marvel", "Series": "Vision and the Scarlet Witch", "Issue Number": 1, "Year": 1980, "Grade": "", "Quantity": 1, "Value": "$110", "Total Value": "$110"}, 
+{"Manufacturer": "Gold Key", "Series": "Flash Gordon", "Issue Number": 23, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$103", "Total Value": "$103"}, 
+{"Manufacturer": "Marvel", "Series": "The Invincible Iron Man", "Issue Number": 126, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "\"$1", "Total Value": "499\""}, 
+{"Manufacturer": "Gold Key", "Series": "Flash Gordon", "Issue Number": 21, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$80", "Total Value": "$80"}, 
+{"Manufacturer": "DC", "Series": "Batman the Killing Joke", "Issue Number": null, "Year": null, "Grade": "", "Quantity": 1, "Value": "$90", "Total Value": "$90"}, 
+{"Manufacturer": "Gold Key", "Series": "Flash Gordon", "Issue Number": 22, "Year": 1979, "Grade": "", "Quantity": 1, "Value": "$80", "Total Value": "$80"}
+
+
+                ];
+
+                let tbody = document.querySelector("tbody");
+                comics.forEach(comic => {
+                    let row = tbody.insertRow();
+                    Object.values(comic).forEach(text => {
+                        let cell = row.insertCell();
+                        cell.textContent = text;
+                    });
+                });
+
+                function searchTable() {
+                    let input = document.getElementById("search");
+                    let filter = input.value.toLowerCase();
+                    let rows = tbody.getElementsByTagName("tr");
+                    for (let row of rows) {
+                        let txtValue = row.textContent || row.innerText;
+                        row.style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+                    }
+                }
+
+                function sortTable(n) {
+                    let table = document.getElementById("comicTable");
+                    let rows = Array.from(table.rows).slice(1);
+                    let ascending = table.rows[0].cells[n].getAttribute("data-order") !== "asc";
+                    rows.sort((a, b) => {
+                        let x = a.cells[n].innerText.toLowerCase();
+                        let y = b.cells[n].innerText.toLowerCase();
+                        return ascending ? (x > y ? 1 : -1) : (x < y ? 1 : -1);
+                    });
+                    rows.forEach(row => tbody.appendChild(row));
+                    table.rows[0].cells[n].setAttribute("data-order", ascending ? "asc" : "desc");
+                }
+            </script>
+        </tbody>
+    </table>
+</body>
+</html>

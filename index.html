@@ -18,18 +18,41 @@
             font-size: 36px;
             margin-bottom: 20px;
         }
-        #search {
-            width: 100%;
-            max-width: 600px;
-            padding: 10px;
-            margin: 20px auto;
-            border-radius: 25px;
-            border: 2px solid #d1d1d1;
-            font-size: 16px;
-            outline: none;
+        #passwordPrompt {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
         }
-        #search:focus {
-            border-color: #607d8b;
+        #passwordInput {
+            width: 300px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #submitPassword {
+            padding: 10px 20px;
+            border: none;
+            background-color: #00796b;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #submitPassword:hover {
+            background-color: #004d40;
+        }
+        #content {
+            display: none;
+            margin-top: 20px;
+        }
+        #totalValue {
+            text-align: right;
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: bold;
         }
         table {
             width: 100%;
@@ -57,38 +80,44 @@
         tr:hover td {
             background-color: #f1f8e9;
         }
-        #totalValue {
-            text-align: right;
-            font-size: 18px;
-            margin-top: 20px auto;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
-    <h1>Comic Collection Database</h1>
-    <div id="totalValue">Total Collection Value: $0</div>
-    <input type="text" id="search" onkeyup="searchTable()" placeholder="Search for comics...">
-    <table id="comicTable">
-        <thead>
-            <tr>
-                <th onclick="sortTable(0)">Manufacturer</th>
-                <th onclick="sortTable(1)">Series</th>
-                <th onclick="sortTable(2)">Issue Number</th>
-                <th onclick="sortTable(3)">Year</th>
-                <th onclick="sortTable(4)">Grade</th>
-                <th onclick="sortTable(5)">Quantity</th>
-                <th onclick="sortTable(6)">Value</th>
-                <th onclick="sortTable(7)">Total Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- JavaScript will populate this section -->
-        </tbody>
-    </table>
 
+    <div id="passwordPrompt">
+        <div>
+            <h1>Enter Password</h1>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <button id="submitPassword" onclick="checkPassword()">Submit</button>
+        </div>
+    </div>
+
+    <div id="content">
+        <h1>Comic Collection Database</h1>
+        <div id="totalValue">Total Collection Value: $0</div>
+        <input type="text" id="search" onkeyup="searchTable()" placeholder="Search for comics...">
+        <table id="comicTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Manufacturer</th>
+                    <th onclick="sortTable(1)">Series</th>
+                    <th onclick="sortTable(2)">Issue Number</th>
+                    <th onclick="sortTable(3)">Year</th>
+                    <th onclick="sortTable(4)">Grade</th>
+                    <th onclick="sortTable(5)">Quantity</th>
+                    <th onclick="sortTable(6)">Value</th>
+                    <th onclick="sortTable(7)">Total Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- JavaScript will populate this section -->
+            </tbody>
+        </table>
+    </div>
+	<script src="Logs.js"></script>
     <script>
-        let comics = [
+
+        var comics = [
     {"Manufacturer": "DC","Series": "The Brave and the Bold","Issue Number": 123,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
     {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 13,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
     {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 157,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
@@ -481,6 +510,18 @@
             rows.forEach(row => tbody.appendChild(row));
             tbody.rows[0].cells[n].setAttribute("data-order", ascending ? "asc" : "desc");
         }
+
+        function checkPassword() {
+            let inputPassword = document.getElementById("passwordInput").value;
+            if (inputPassword === _0x5398) {
+                document.getElementById("passwordPrompt").style.display = "none";
+                document.getElementById("content").style.display = "block";
+                renderTable(); // Re-render the table after showing content
+            } else {
+                alert("Incorrect password. Try again.");
+            }
+        }
     </script>
+
 </body>
 </html>

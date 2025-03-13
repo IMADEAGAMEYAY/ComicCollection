@@ -602,6 +602,16 @@
 
         let tbody = document.querySelector("tbody");
 
+        function updateTotalValue() {
+            let totalValue = 0;
+            comics.forEach(comic => {
+                let value = parseFloat(comic.Value.replace('$', '').replace(',', ''));
+                let quantity = comic.Quantity;
+                totalValue += value * quantity;
+            });
+            document.getElementById('totalValue').textContent = 'Total Collection Value: $' + totalValue.toFixed(2);
+        }
+
         function renderTable() {
             tbody.innerHTML = "";
             comics.forEach(comic => {
@@ -611,6 +621,7 @@
                     cell.textContent = text || "N/A";
                 });
             });
+            updateTotalValue();
         }
 
         function sortTable(n) {

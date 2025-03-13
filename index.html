@@ -607,23 +607,20 @@
             tbody.innerHTML = "";
             comics.forEach(comic => {
                 let row = tbody.insertRow();
-                Object.values(comic).forEach((text, index) => {
+                Object.values(comic).forEach(text => {
                     let cell = row.insertCell();
                     cell.textContent = text || "N/A";
                 });
             });
         }
 
-        function sortTable(columnIndex) {
-            let rows = Array.from(tbody.rows);
-            let ascending = tbody.getAttribute("data-sort") !== "asc";
-            rows.sort((a, b) => {
-                let x = a.cells[columnIndex].innerText.replace('$', '').replace(',', '');
-                let y = b.cells[columnIndex].innerText.replace('$', '').replace(',', '');
-                return ascending ? (isNaN(x) ? x.localeCompare(y) : x - y) : (isNaN(y) ? y.localeCompare(x) : y - x);
-            });
-            rows.forEach(row => tbody.appendChild(row));
-            tbody.setAttribute("data-sort", ascending ? "asc" : "desc");
+        function searchTable() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let rows = tbody.getElementsByTagName("tr");
+            for (let row of rows) {
+                let txtValue = row.textContent || row.innerText;
+                row.style.display = txtValue.toLowerCase().includes(input) ? "" : "none";
+            }
         }
 
         renderTable();

@@ -6,120 +6,93 @@
     <title>Comic Collection Database</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #1e1e2f;
-            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            max-width: 900px;
-            width: 100%;
             padding: 20px;
-            background: #2a2a3a;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            margin-top: 50px;
         }
         h1 {
             text-align: center;
-            font-size: 28px;
+            color: #2d3a3d;
+            font-size: 36px;
             margin-bottom: 20px;
         }
-        .input-group {
+        #passwordPrompt {
             display: flex;
-            gap: 10px;
             justify-content: center;
-            margin-bottom: 15px;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
         }
-        input, button {
-            padding: 12px;
-            border: none;
+        #passwordInput {
+            width: 300px;
+            padding: 10px;
             border-radius: 5px;
             font-size: 16px;
+            margin-bottom: 20px;
         }
-        input {
-            width: 250px;
-            background: #333;
+        #submitPassword {
+            padding: 10px 20px;
+            border: none;
+            background-color: #00796b;
             color: white;
-            outline: none;
-        }
-        button {
-            background: #4CAF50;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .hidden {
-            display: none;
-        }
-        .settings {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #444;
-            padding: 10px;
-            border-radius: 8px;
+            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        .settings-panel {
-            display: none;
-            position: fixed;
-            top: 50px;
-            right: 10px;
-            background: #333;
-            padding: 15px;
-            border-radius: 8px;
-            width: 200px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        #submitPassword:hover {
+            background-color: #004d40;
         }
-        .settings-panel label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 14px;
+        #content {
+            display: none;
+            margin-top: 20px;
+        }
+        #totalValue {
+            text-align: right;
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: bold;
         }
         table {
             width: 100%;
-            border-collapse: collapse;
             margin-top: 20px;
+            border-collapse: collapse;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
+            font-size: 14px;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #00796b;
             color: white;
             cursor: pointer;
         }
+        th:hover {
+            background-color: #004d40;
+        }
         td {
-            background: #2a2a3a;
-            border-bottom: 1px solid #444;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover td {
+            background-color: #f1f8e9;
         }
     </style>
 </head>
 <body>
-    <div class="settings" onclick="toggleSettings()">⚙️</div>
-    <div class="settings-panel" id="settingsPanel">
-        <label><input type="checkbox" id="darkModeToggle"> Dark Mode</label>
-        <label><input type="checkbox" id="showPasswordToggle"> Show Password</label>
-    </div>
 
-    <div class="container" id="passwordPrompt">
-        <h1>Enter Password</h1>
-        <div class="input-group">
+    <div id="passwordPrompt">
+        <div>
+            <h1>Enter Password</h1>
             <input type="password" id="passwordInput" placeholder="Enter password">
-            <button onclick="checkPassword()">Submit</button>
+            <button id="submitPassword" onclick="checkPassword()">Submit</button>
         </div>
     </div>
-    
-    <div class="container hidden" id="content">
+
+    <div id="content">
         <h1>Comic Collection Database</h1>
         <div id="totalValue">Total Collection Value: $0</div>
         <input type="text" id="search" onkeyup="searchTable()" placeholder="Search for comics...">
@@ -137,493 +110,418 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- JavaScript will populate this section -->
             </tbody>
         </table>
     </div>
-    
+	<script src="Logs.js"></script>
     <script>
-        var correctPassword = "avengers!1963";
-
-        function checkPassword() {
-            let inputPassword = document.getElementById("passwordInput").value;
-            if (inputPassword === correctPassword) {
-                document.getElementById("passwordPrompt").classList.add("hidden");
-                document.getElementById("content").classList.remove("hidden");
-                renderTable();
-            } else {
-                alert("Incorrect password. Try again.");
-            }
-        }
 
         var comics = [
-        {"Manufacturer": "DC","Series": "The Flash","Issue Number": 319,"Year": 1983,"Grade": "","Quantity": 0,"Value": "$65","Total Value": "$0"},
-    {"Manufacturer": "Archie Adventure Series","Series": "Adventures of The Fly","Issue Number": 13,"Year": 1961,"Grade": "","Quantity": 0,"Value": "$235","Total Value": "$0"},
-    {"Manufacturer": "DC","Series": "The Fury of Firestorm","Issue Number": 11,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$10","Total Value": "$10"},
-    {"Manufacturer": "DC","Series": "The New Adventures of Superboy","Issue Number": 39,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$10","Total Value": "$10"},
-    {"Manufacturer": "Marvel","Series": "Marvel Classic Comics","Issue Number": 2,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$25","Total Value": "$25"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 79,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$26","Total Value": "$26"},
-    {"Manufacturer": "First Comics","Series": "Jon Sable Freelance","Issue Number": 7,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$30","Total Value": "$30"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 240,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$35","Total Value": "$35"},
-    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 85,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$35","Total Value": "$35"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 489,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$35","Total Value": "$35"},
-    {"Manufacturer": "DC","Series": "Arion, The Lord of Atlantis","Issue Number": 5,"Year": 1983,"Grade": "","Quantity": 6,"Value": "$6","Total Value": "$36"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 238,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$38","Total Value": "$38"},
-    {"Manufacturer": "Marvel","Series": "Spiderman","Issue Number": 15,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$40","Total Value": "$40"},
-    {"Manufacturer": "Marvel","Series": "Machine Man","Issue Number": 9,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$42","Total Value": "$42"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 87,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$42","Total Value": "$42"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 72,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$46","Total Value": "$46"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 72,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$47","Total Value": "$47"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 75,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$47","Total Value": "$47"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 78,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$47","Total Value": "$47"},
-    {"Manufacturer": "DC","Series": "Batman vs Predator","Issue Number": 3,"Year": 1992,"Grade": "","Quantity": 1,"Value": "$48","Total Value": "$48"},
+    {"Manufacturer": "DC","Series": "The Brave and the Bold","Issue Number": 123,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 13,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 157,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 158,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 159,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 191,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 207,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 156,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man Annual","Issue Number": 10,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
     {"Manufacturer": "Marvel","Series": "Peter Parker, The Spectacular Spider-Man","Issue Number": 24,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 168,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 203,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
     {"Manufacturer": "Marvel","Series": "Peter Parker, The Spectacular Spider-Man","Issue Number": 25,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
     {"Manufacturer": "Marvel","Series": "Peter Parker, The Spectacular Spider-Man","Issue Number": 19,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "DC","Series": "DC Comic Presents","Issue Number": 17,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 88,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "Marvel","Series": "Howard the Duck","Issue Number": 24,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 76,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "","Series": "Schizophrenia","Issue Number": 0,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 305,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 77,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
-    {"Manufacturer": "Marvel","Series": "Tge Avengers","Issue Number": 201,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 56,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 400,"Year": 1992,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 194,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "First Comics","Series": "American Flagg","Issue Number": 2,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 235,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 191,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 168,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 80,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 116,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 506,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 352,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "DC","Series": "Batman vs Predator","Issue Number": 2,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "The Man-Thing","Issue Number": 1,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 353,"Year": 0,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "The Amzing Spider-Man","Issue Number": 278,"Year": 0,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 236,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 13,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
     {"Manufacturer": "Marvel","Series": "Peter Parker, The Spectacular Spider-Man","Issue Number": 21,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 180,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
-    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 17,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 81,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$72","Total Value": "$72"},
-    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 17,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$73","Total Value": "$73"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 203,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
-    {"Manufacturer": "Marvel","Series": "Mavel Team Up Spider Man and Black Panther","Issue Number": 87,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
-    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 18,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
-    {"Manufacturer": "DC","Series": "Batman vs Predator","Issue Number": 1,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
-    {"Manufacturer": "","Series": "Dope Comix","Issue Number": 3,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 73,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$79","Total Value": "$79"},
-    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 21,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 22,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 480,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 68,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 69,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "DC","Series": "The Flash","Issue Number": 316,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "DC","Series": "The Flash","Issue Number": 320,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "Marvel","Series": "King Conan","Issue Number": 6,"Year": 1981,"Grade": "","Quantity": 2,"Value": "$40","Total Value": "$80"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 68,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "Marvel","Series": "Dardevil - Newstand","Issue Number": 181,"Year": 1982,"Grade": "","Quantity": 2,"Value": "$100","Total Value": "$200"},
     {"Manufacturer": "Marvel","Series": "Daredevil","Issue Number": 181,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$85","Total Value": "$85"},
-    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 15,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$85","Total Value": "$85"},
-    {"Manufacturer": "DC","Series": "Batman the Killing Joke","Issue Number": 0,"Year": 0,"Grade": "","Quantity": 1,"Value": "$90","Total Value": "$90"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 190,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$90","Total Value": "$90"},
-    {"Manufacturer": "Marvel","Series": "The Eternals","Issue Number": 17,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$90","Total Value": "$90"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 80,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 100,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 282,"Year": 0,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 100,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 57,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 158,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 309,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 37,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 182,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 179,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 114,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "The Savage She Hulk","Issue Number": 3,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 1,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 4,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 6,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel and DC","Series": "The Uncanny X-Men and The New Teen Titans","Issue Number": 1,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "Moon Knight","Issue Number": 17,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 40,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 65,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "Dr. Strange","Issue Number": 43,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "","Series": "Fever Dreams","Issue Number": 1,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 232,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 250,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "","Series": "Slow Death","Issue Number": 3,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 23,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$103","Total Value": "$103"},
-    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 57,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$105","Total Value": "$105"},
+    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 240,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$35","Total Value": "$35"},
+    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 238,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$38","Total Value": "$38"},
+    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 16,"Year": 1982,"Grade": "","Quantity": 117,"Value": "$40","Total Value": "$4,680"},
     {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 463,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$109","Total Value": "$109"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 465,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$270","Total Value": "$270"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 471,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$270","Total Value": "$270"},
+    {"Manufacturer": "Marvel","Series": "Moon Knight","Issue Number": 23,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
+    {"Manufacturer": "Marvel","Series": "Mavel Team Up Spider Man and Black Panther","Issue Number": 87,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
+    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 85,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$35","Total Value": "$35"},
+    {"Manufacturer": "DC","Series": "DC Comic Presents","Issue Number": 1,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
+    {"Manufacturer": "DC","Series": "DC Comic Presents","Issue Number": 17,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
+    {"Manufacturer": "Marvel","Series": "Star Trek","Issue Number": 1,"Year": 1980,"Grade": "","Quantity": 3,"Value": "$100","Total Value": "$300"},
+    {"Manufacturer": "Marvel","Series": "Star Trek","Issue Number": 3,"Year": 1980,"Grade": "","Quantity": 3,"Value": "$180","Total Value": "$540"},
+    {"Manufacturer": "Marvel","Series": "Star Trek","Issue Number": 2,"Year": 1980,"Grade": "","Quantity": 6,"Value": "$130","Total Value": "$780"},
+    {"Manufacturer": "Marvel","Series": "Spiderman","Issue Number": 15,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$40","Total Value": "$40"},
+    {"Manufacturer": "Marvel","Series": "Fantasy Masterpieces","Issue Number": 2,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "World's Finest","Issue Number": 209,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$419","Total Value": "$419"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 218,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$3,000","Total Value": "$3,000"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 309,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 220,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "King Size Annual - Star Wars","Issue Number": 1,"Year": 1979,"Grade": "","Quantity": 3,"Value": "$100","Total Value": "$300"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 305,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
+    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 400,"Year": 1992,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
+    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 39,"Year": 1980,"Grade": "","Quantity": 10,"Value": "$160","Total Value": "$1,600"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 236,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$700","Total Value": "$700"},
+    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 37,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 303,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$355","Total Value": "$355"},
+    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 3,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$277","Total Value": "$277"},
+    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 8,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$220","Total Value": "$220"},
+    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 10,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
+    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 88,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
     {"Manufacturer": "DC","Series": "Superman","Issue Number": 315,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 41,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$290","Total Value": "$290"},
+    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 1,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$2,700","Total Value": "$2,700"},
+    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 81,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
     {"Manufacturer": "Marvel","Series": "Vision and the Scarlet Witch","Issue Number": 1,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 23,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$103","Total Value": "$103"},
+    {"Manufacturer": "Marvel","Series": "The Invincible Iron Man","Issue Number": 126,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$1,499","Total Value": "$1,499"},
+    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 21,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "DC","Series": "Batman the Killing Joke","Issue Number": 0,"Year": 0,"Grade": "","Quantity": 1,"Value": "$90","Total Value": "$90"},
+    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 22,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "Gold Key","Series": "Lost in Space","Issue Number": 34,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
+    {"Manufacturer": "Gold Key","Series": "Lost in Space","Issue Number": 48,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
+    {"Manufacturer": "Marvel","Series": "The Uncanny X-men","Issue Number": 156,"Year": 1982,"Grade": "","Quantity": 16,"Value": "$3,100","Total Value": "$49,600"},
+    {"Manufacturer": "Marvel","Series": "King Size Annuel - The Avengers","Issue Number": 8,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
+    {"Manufacturer": "DC","Series": "Green Lantern Co-Starring Green Arrow","Issue Number": 108,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 480,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "Marvel","Series": "What If?","Issue Number": 34,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
+    {"Manufacturer": "Marvel","Series": "What If Wolverine was an Agent of SHIELD","Issue Number": 7,"Year": 1989,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "DC","Series": "Batman","Issue Number": 220,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$2,000","Total Value": "$2,000"},
+    {"Manufacturer": "Marvel","Series": "The Savage She Hulk","Issue Number": 7,"Year": 1980,"Grade": "","Quantity": 2,"Value": "$120","Total Value": "$240"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 68,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 311,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$1,000","Total Value": "$1,000"},
+    {"Manufacturer": "Gold Key","Series": "Space Family Robinson","Issue Number": 20,"Year": 1962,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
+    {"Manufacturer": "Gold Key","Series": "Space Family Robinson","Issue Number": 27,"Year": 1962,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
+    {"Manufacturer": "DC","Series": "Batman","Issue Number": 199,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$2,900","Total Value": "$2,900"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 63,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 79,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$26","Total Value": "$26"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 80,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
     {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 85,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 362,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$2,629","Total Value": "$2,629"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 77,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 69,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 356,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 70,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
+    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 354,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$725","Total Value": "$725"},
+    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 357,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 72,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$46","Total Value": "$46"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 72,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$47","Total Value": "$47"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 329,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$850","Total Value": "$850"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 189,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 175,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$525","Total Value": "$525"},
+    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 105,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$1,380","Total Value": "$1,380"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 191,"Year": 1979,"Grade": "","Quantity": 2,"Value": "$120","Total Value": "$240"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 190,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$90","Total Value": "$90"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 182,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 192,"Year": 1979,"Grade": "","Quantity": 2,"Value": "$90","Total Value": "$180"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 194,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 196,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 150,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 164,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
+    {"Manufacturer": "DC","Series": "Strange Adventures","Issue Number": 200,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$525","Total Value": "$525"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 178,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 176,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 175,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 341,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 171,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 179,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 152,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$625","Total Value": "$625"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 180,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
+    {"Manufacturer": "Marvel","Series": "King Size Annual:  The Avengers","Issue Number": 7,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
+    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 18,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
     {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 172,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "DC","Series": "The Untold Legend of the Batman","Issue Number": 1,"Year": 1980,"Grade": "","Quantity": 11,"Value": "$210","Total Value": "$2,310"},
+    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 7,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$227","Total Value": "$227"},
+    {"Manufacturer": "DC","Series": "Wonder Woman","Issue Number": 178,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,440","Total Value": "$1,440"},
+    {"Manufacturer": "DC","Series": "The Untold Legend of the Batman","Issue Number": 2,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$115","Total Value": "$115"},
+    {"Manufacturer": "DC","Series": "The Untold Legend of the Batman","Issue Number": 3,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
+    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 103,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$1,900","Total Value": "$1,900"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 80,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 80,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 100,"Year": 1979,"Grade": "","Quantity": 22,"Value": "$120","Total Value": "$2,640"},
+    {"Manufacturer": "Marvel","Series": "Strange Tales","Issue Number": 161,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$450","Total Value": "$450"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 119,"Year": 1980,"Grade": "","Quantity": 2,"Value": "$250","Total Value": "$500"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 116,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 114,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "Captain America and the Falcon","Issue Number": 136,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 52,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
     {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 53,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 4,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,405","Total Value": "$1,405"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 54,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 68,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
+    {"Manufacturer": "Marvel","Series": "The Mighty Thor Annual","Issue Number": 2,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$1,800","Total Value": "$1,800"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 186,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 70,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
+    {"Manufacturer": "Marvel","Series": "Sub-Mariner","Issue Number": 31,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$475","Total Value": "$475"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 71,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 72,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "Sub-Mariner","Issue Number": 11,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 100,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
+    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 114,"Year": 1969,"Grade": "","Quantity": 2,"Value": "$3,600","Total Value": "$7,200"},
+    {"Manufacturer": "DC","Series": "The Flash","Issue Number": 319,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$0"},
+    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 15,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 4,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$775","Total Value": "$775"},
+    {"Manufacturer": "Blue Beetle","Series": "Blue Beetle","Issue Number": 2,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$1,550","Total Value": "$1,550"},
+    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 10,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
+    {"Manufacturer": "Blue Beetle","Series": "Blue Beetle","Issue Number": 2,"Year": 1964,"Grade": "","Quantity": 0,"Value": "","Total Value": "$0"},
+    {"Manufacturer": "Archie Adventure Series","Series": "Adventures of The Fly","Issue Number": 10,"Year": 1961,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
+    {"Manufacturer": "Marvel","Series": "Marvel Super- Heroes","Issue Number": 21,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$550","Total Value": "$550"},
+    {"Manufacturer": "Marvel","Series": "Nick Fury Agent of Sheild","Issue Number": 4,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$3,500","Total Value": "$3,500"},
+    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 17,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$73","Total Value": "$73"},
+    {"Manufacturer": "Archie Adventure Series","Series": "Adventures of The Fly","Issue Number": 13,"Year": 1961,"Grade": "","Quantity": 1,"Value": "$235","Total Value": "$0"},
+    {"Manufacturer": "Archie Adventure Series","Series": "Adventures of The Fly","Issue Number": 18,"Year": 1962,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 75,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$47","Total Value": "$47"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 59,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$7,500","Total Value": "$7,500"},
+    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 22,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
+    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 23,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,400","Total Value": "$1,400"},
+    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 24,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
+    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 25,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
+    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 27,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
+    {"Manufacturer": "Marvel","Series": "The Mighty Avengers","Issue Number": 63,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$1,000","Total Value": "$1,000"},
+    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 8,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$215","Total Value": "$215"},
+    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 6,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$336","Total Value": "$336"},
+    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 12,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
+    {"Manufacturer": "Gold Key","Series": "M.A.R.S. Patrol","Issue Number": 9,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$125","Total Value": "$125"},
+    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 113,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$2,000","Total Value": "$2,000"},
+    {"Manufacturer": "First Comics","Series": "American Flagg","Issue Number": 1,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
+    {"Manufacturer": "First Comics","Series": "American Flagg","Issue Number": 2,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
+    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 31,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$600","Total Value": "$600"},
+    {"Manufacturer": "DDC","Series": "Action Comics","Issue Number": 338,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$415","Total Value": "$415"},
+    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 34,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
+    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 35,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 419,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 304,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$650","Total Value": "$650"},
+    {"Manufacturer": "Gold Key","Series": "Star Trek","Issue Number": 13,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$1,550","Total Value": "$1,550"},
+    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 37,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$950","Total Value": "$950"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 546,"Year": 1983,"Grade": "","Quantity": 2,"Value": "$100","Total Value": "$200"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 285,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 287,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
+    {"Manufacturer": "Archie Adventure Series","Series": "The Adventures of Jaguar","Issue Number": 13,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 265,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 426,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$126","Total Value": "$126"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 264,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$385","Total Value": "$385"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 253,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
+    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 2,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 424,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
+    {"Manufacturer": "DC","Series": "The Joker","Issue Number": 1,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$1,200","Total Value": "$1,200"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 316,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 324,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 322,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 506,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 318,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 434,"Year": 1974,"Grade": "","Quantity": 1,"Value": "$282","Total Value": "$282"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 308,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 307,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$475","Total Value": "$475"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 297,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 415,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$225","Total Value": "$225"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 296,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 292,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
+    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 288,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$207","Total Value": "$207"},
+    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 492,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 62,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
+    {"Manufacturer": "Marvel","Series": "Wolverine Limited Series","Issue Number": 1,"Year": 1982,"Grade": "","Quantity": 2,"Value": "$15,500","Total Value": "$31,000"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 55,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 57,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 282,"Year": 0,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 66,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
+    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 61,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$425","Total Value": "$425"},
+    {"Manufacturer": "Gold Key","Series": "Space Family Robinson","Issue Number": 31,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
+    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 81,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
+    {"Manufacturer": "Gold Key","Series": "Magnus Robot Fighter 4000 AD","Issue Number": 24,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
+    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 57,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$105","Total Value": "$105"},
+    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 18,"Year": 1981,"Grade": "","Quantity": 9,"Value": "$80","Total Value": "$720"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 352,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "Marvel","Series": "The Eternals","Issue Number": 18,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 237,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$825","Total Value": "$825"},
+    {"Manufacturer": "DC","Series": "The Flash","Issue Number": 316,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 232,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$1,200","Total Value": "$1,200"},
+    {"Manufacturer": "DC","Series": "DC Comics Presents","Issue Number": 26,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$800","Total Value": "$800"},
+    {"Manufacturer": "First Comics","Series": "Jon Sable Freelance","Issue Number": 7,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$30","Total Value": "$30"},
+    {"Manufacturer": "Marvel","Series": "The Savage She Hulk","Issue Number": 3,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "Uncanny X-men","Issue Number": 155,"Year": 1982,"Grade": "","Quantity": 37,"Value": "$170","Total Value": "$6,290"},
+    {"Manufacturer": "Charleston Comics","Series": "Doomsday +1","Issue Number": 1,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$450","Total Value": "$450"},
+    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 198,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$8,000","Total Value": "$8,000"},
+    {"Manufacturer": "DC","Series": "The Flash","Issue Number": 320,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "DC","Series": "The Fury of Firestorm","Issue Number": 11,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$10","Total Value": "$10"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 190,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
+    {"Manufacturer": "Marvel","Series": "The Mighty THOR","Issue Number": 300,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "DC","Series": "The New Adventures of Superboy","Issue Number": 39,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$10","Total Value": "$10"},
+    {"Manufacturer": "DC","Series": "Superman","Issue Number": 179,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
+    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 169,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 180,"Year": 1984,"Grade": "","Quantity": 1,"Value": "$127","Total Value": "$127"},
+    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 1,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
     {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 7,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
     {"Manufacturer": "DC","Series": "Superboy Spectacular","Issue Number": 1,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 4,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 6,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
     {"Manufacturer": "DC","Series": "The Adventures of Superboy","Issue Number": 1,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
-    {"Manufacturer": "Marvel","Series": "King Conan","Issue Number": 2,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
-    {"Manufacturer": "Marvel","Series": "thThe Avengers","Issue Number": 199,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 39,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 64,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 223,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
-    {"Manufacturer": "DC","Series": "The Untold Legend of the Batman","Issue Number": 2,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$115","Total Value": "$115"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 58,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$115","Total Value": "$115"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 157,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
-    {"Manufacturer": "Marvel","Series": "Moon Knight","Issue Number": 23,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
-    {"Manufacturer": "Gold Key","Series": "Lost in Space","Issue Number": 34,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
-    {"Manufacturer": "Marvel","Series": "Team Up","Issue Number": 86,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 37,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 60,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
-    {"Manufacturer": "Gold Key","Series": "M.A.R.S. Patrol","Issue Number": 9,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$125","Total Value": "$125"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 426,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$126","Total Value": "$126"},
-    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 180,"Year": 1984,"Grade": "","Quantity": 1,"Value": "$127","Total Value": "$127"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 178,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
-    {"Manufacturer": "First Comics","Series": "American Flagg","Issue Number": 1,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 29,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 57,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 59,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 225,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
+    {"Manufacturer": "DC","Series": "Batman vs Predator","Issue Number": 1,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$75","Total Value": "$75"},
+    {"Manufacturer": "DC","Series": "Batman vs Predator","Issue Number": 2,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "DC","Series": "Batman vs Predator","Issue Number": 3,"Year": 1992,"Grade": "","Quantity": 1,"Value": "$48","Total Value": "$48"},
+    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 142,"Year": 1981,"Grade": "","Quantity": 15,"Value": "$375","Total Value": "$5,625"},
+    {"Manufacturer": "DC","Series": "Superboy","Issue Number": 81,"Year": 1960,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 1,"Year": 1981,"Grade": "","Quantity": 9,"Value": "$120","Total Value": "$1,080"},
+    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 2,"Year": 1981,"Grade": "","Quantity": 3,"Value": "$75","Total Value": "$225"},
+    {"Manufacturer": "DC","Series": "Superboy","Issue Number": 143,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$606","Total Value": "$606"},
+    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 3,"Year": 1981,"Grade": "","Quantity": 5,"Value": "$130","Total Value": "$0"},
+    {"Manufacturer": "DC","Series": "Arion, The Lord of Atlantis","Issue Number": 5,"Year": 1983,"Grade": "","Quantity": 6,"Value": "$6","Total Value": "$36"},
+    {"Manufacturer": "Marvel","Series": "The Mighty Thor","Issue Number": 274,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 4,"Year": 1981,"Grade": "","Quantity": 3,"Value": "$130","Total Value": "$390"},
+    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 5,"Year": 1981,"Grade": "","Quantity": 4,"Value": "$80","Total Value": "$320"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 68,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$2,340","Total Value": "$2,340"},
+    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 8,"Year": 1981,"Grade": "","Quantity": 2,"Value": "$85","Total Value": "$170"},
+    {"Manufacturer": "","Series": "","Issue Number": 0,"Year": 0,"Grade": "","Quantity": 0,"Value": "","Total Value": "$0"},
+    {"Manufacturer": "Marvel","Series": "X-Men","Issue Number": 138,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 141,"Year": 1981,"Grade": "","Quantity": 8,"Value": "$900","Total Value": "$7,200"},
+    {"Manufacturer": "DC","Series": "Maxi-Series: Amethyst Princess of Gemworld","Issue Number": 1,"Year": 1983,"Grade": "","Quantity": 6,"Value": "$65","Total Value": "$390"},
+    {"Manufacturer": "Marvel","Series": "The Avengers Annual (Newstand editiion)","Issue Number": 1,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$1,100","Total Value": "$1,100"},
+    {"Manufacturer": "Marvel and DC","Series": "The Uncanny X-Men and The New Teen Titans","Issue Number": 1,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "Marvel Classic Comics","Issue Number": 2,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$25","Total Value": "$25"},
+    {"Manufacturer": "Marvel","Series": "The Man-Thing","Issue Number": 1,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "Marvel","Series": "The Man-Thing","Issue Number": 11,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "Machine Man","Issue Number": 9,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$42","Total Value": "$42"},
     {"Manufacturer": "Marvel","Series": "Machine Man","Issue Number": 3,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$135","Total Value": "$135"},
-    {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 216,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$139","Total Value": "$139"},
-    {"Manufacturer": "DC","Series": "DC Comic Presents","Issue Number": 1,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 63,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 70,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 71,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 213,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 61,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 258,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "DC","Series": "The Brave and the Bold","Issue Number": 123,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "Fantasy Masterpieces","Issue Number": 2,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 220,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "What If Wolverine was an Agent of SHIELD","Issue Number": 7,"Year": 1989,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 72,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 285,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 297,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "The Mighty THOR","Issue Number": 300,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 169,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 217,"Year": 1982,"Grade": "","Quantity": 2,"Value": "$80","Total Value": "$160"},
     {"Manufacturer": "Marvel","Series": "Logan's Run","Issue Number": 1,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "King Conan","Issue Number": 6,"Year": 1981,"Grade": "","Quantity": 2,"Value": "$40","Total Value": "$80"},
+    {"Manufacturer": "Marvel","Series": "Tge Avengers","Issue Number": 201,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
+    {"Manufacturer": "Marvel","Series": "King Conan","Issue Number": 2,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
     {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 223,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 219,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "Marvel","Series": "thThe Avengers","Issue Number": 199,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 218,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
+    {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 216,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$139","Total Value": "$139"},
+    {"Manufacturer": "Marvel","Series": "Iron Fist","Issue Number": 9,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
     {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 188,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 489,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$35","Total Value": "$35"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 353,"Year": 0,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
+    {"Manufacturer": "Marvel","Series": "Moon Knight","Issue Number": 17,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
     {"Manufacturer": "Marvel","Series": "Fantastic Four","Issue Number": 197,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 295,"Year": 0,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "Marvel","Series": "Fantastic Four","Issue Number": 238,"Year": 1981,"Grade": "","Quantity": 8,"Value": "$80","Total Value": "$640"},
+    {"Manufacturer": "Marvel","Series": "Fantastic Four Annual","Issue Number": 7,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
+    {"Manufacturer": "Marvel","Series": "The Amzing Spider-Man","Issue Number": 278,"Year": 0,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
     {"Manufacturer": "Marvel","Series": "The Amzing Spider-Man","Issue Number": 237,"Year": 0,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
     {"Manufacturer": "Marvel","Series": "Fantastic Four","Issue Number": 245,"Year": 1982,"Grade": "","Quantity": 3,"Value": "$50","Total Value": "$150"},
     {"Manufacturer": "Marvel","Series": "Fantastic Four","Issue Number": 240,"Year": 1982,"Grade": "","Quantity": 3,"Value": "$50","Total Value": "$150"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 184,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "","Series": "Junkwaffel","Issue Number": 4,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "","Series": "The Fabulous Freak Brothers","Issue Number": 4,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "","Series": "Rip Off Comix","Issue Number": 8,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 48,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 226,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 249,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$150","Total Value": "$150"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 61,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$153","Total Value": "$153"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 171,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
-    {"Manufacturer": "DC","Series": "The Untold Legend of the Batman","Issue Number": 3,"Year": 1980,"Grade": "","Quantity": 2,"Value": "$160","Total Value": "$320"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 217,"Year": 1982,"Grade": "","Quantity": 2,"Value": "$80","Total Value": "$160"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 206,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
-    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 83,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 43,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 159,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 10,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 176,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 62,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 66,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 8,"Year": 1981,"Grade": "","Quantity": 2,"Value": "$85","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 218,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 62,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 222,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Gold Key","Series": "Lost in Space","Issue Number": 48,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 192,"Year": 1979,"Grade": "","Quantity": 2,"Value": "$90","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 80,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 52,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 70,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "PC","Series": "Twisted Tales","Issue Number": 2,"Year": 1983,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 57,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 99,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 62,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 193,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$182","Total Value": "$182"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 189,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 318,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 55,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
-    {"Manufacturer": "Marvel","Series": "X-Men","Issue Number": 138,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
-    {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 219,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 295,"Year": 0,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 15,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$85","Total Value": "$85"},
     {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 236,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 17,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
     {"Manufacturer": "DC","Series": "The Shadow","Issue Number": 1,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
-    {"Manufacturer": "Mavel","Series": "The Amazing Spider-Man","Issue Number": 199,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 227,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$195","Total Value": "$195"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 207,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "Marvel","Series": "Dardevil - Newstand","Issue Number": 181,"Year": 1982,"Grade": "","Quantity": 2,"Value": "$100","Total Value": "$200"},
-    {"Manufacturer": "DC","Series": "Green Lantern Co-Starring Green Arrow","Issue Number": 108,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 150,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 175,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "Archie Adventure Series","Series": "Adventures of The Fly","Issue Number": 18,"Year": 1962,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 546,"Year": 1983,"Grade": "","Quantity": 2,"Value": "$100","Total Value": "$200"},
-    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 492,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "DC","Series": "Superboy","Issue Number": 81,"Year": 1960,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "Marvel","Series": "The Mighty Thor","Issue Number": 274,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "Marvel","Series": "The Man-Thing","Issue Number": 11,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 52,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "","Series": "Young Lust","Issue Number": 3,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "","Series": "The Fabulous Freak Brothers","Issue Number": 2,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "","Series": "Underground Classics","Issue Number": 2,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 288,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$207","Total Value": "$207"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 68,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
-    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 34,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 324,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 322,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$210","Total Value": "$210"},
-    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 8,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$215","Total Value": "$215"},
-    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 8,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$220","Total Value": "$220"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 415,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$225","Total Value": "$225"},
-    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 2,"Year": 1981,"Grade": "","Quantity": 3,"Value": "$75","Total Value": "$225"},
-    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 7,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$227","Total Value": "$227"},
-    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 81,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
-    {"Manufacturer": "Marvel","Series": "The Savage She Hulk","Issue Number": 7,"Year": 1980,"Grade": "","Quantity": 2,"Value": "$120","Total Value": "$240"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 191,"Year": 1979,"Grade": "","Quantity": 2,"Value": "$120","Total Value": "$240"},
-    {"Manufacturer": "Archie Adventure Series","Series": "The Adventures of Jaguar","Issue Number": 13,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 30,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 41,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 66,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 156,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man Annual","Issue Number": 10,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
-    {"Manufacturer": "Marvel","Series": "The Eternals","Issue Number": 18,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
-    {"Manufacturer": "Marvel","Series": "The Eternals","Issue Number": 18,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 257,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
-    {"Manufacturer": "","Series": "Zap Comics","Issue Number": 6,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 36,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$260","Total Value": "$260"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 465,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$270","Total Value": "$270"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 471,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$270","Total Value": "$270"},
-    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 3,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$277","Total Value": "$277"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 35,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$280","Total Value": "$280"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 55,"Year": 1977,"Grade": "","Quantity": 2,"Value": "$140","Total Value": "$280"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 434,"Year": 1974,"Grade": "","Quantity": 1,"Value": "$282","Total Value": "$282"},
-    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 41,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$290","Total Value": "$290"},
-    {"Manufacturer": "Marvel","Series": "Star Trek","Issue Number": 1,"Year": 1980,"Grade": "","Quantity": 3,"Value": "$100","Total Value": "$300"},
-    {"Manufacturer": "Marvel","Series": "King Size Annual - Star Wars","Issue Number": 1,"Year": 1979,"Grade": "","Quantity": 3,"Value": "$100","Total Value": "$300"},
-    {"Manufacturer": "Marvel","Series": "King Size Annuel - The Avengers","Issue Number": 8,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Gold Key","Series": "Space Family Robinson","Issue Number": 20,"Year": 1962,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Gold Key","Series": "Space Family Robinson","Issue Number": 27,"Year": 1962,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 25,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Gold Key","Series": "Space Family Robinson","Issue Number": 31,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 32,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 172,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "","Series": "Junkwaffel","Issue Number": 4,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Marvel","Series": "Conan","Issue Number": 51,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Young Lust","Series": "Young Lust","Issue Number": 2,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$312","Total Value": "$312"},
-    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 5,"Year": 1981,"Grade": "","Quantity": 4,"Value": "$80","Total Value": "$320"},
-    {"Manufacturer": "","Series": "The Fabulous Freak Brothers","Issue Number": 3,"Year": 1971,"Grade": "","Quantity": 2,"Value": "$160","Total Value": "$320"},
-    {"Manufacturer": "Marvel","Series": "King Size Annual:  The Avengers","Issue Number": 7,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 186,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 316,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 296,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 179,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
-    {"Manufacturer": "Marvel","Series": "Fantastic Four Annual","Issue Number": 7,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$325","Total Value": "$325"},
-    {"Manufacturer": "Tower Action Series","Series": "T.H.U.N.D.E.R. Agents","Issue Number": 6,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$336","Total Value": "$336"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 164,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 341,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
-    {"Manufacturer": "Marvel","Series": "Sub-Mariner","Issue Number": 11,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
-    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 35,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
-    {"Manufacturer": "Marvel","Series": "Iron Fist","Issue Number": 9,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$350","Total Value": "$350"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 303,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$355","Total Value": "$355"},
-    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 90,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$360","Total Value": "$360"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 15,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 287,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 424,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 308,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 264,"Year": 1975,"Grade": "","Quantity": 2,"Value": "$385","Total Value": "$770"},
-    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 4,"Year": 1981,"Grade": "","Quantity": 3,"Value": "$130","Total Value": "$390"},
-    {"Manufacturer": "DC","Series": "Maxi-Series: Amethyst Princess of Gemworld","Issue Number": 1,"Year": 1983,"Grade": "","Quantity": 6,"Value": "$65","Total Value": "$390"},
-    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 357,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 54,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
-    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 24,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 12,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 292,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
-    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 81,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$400","Total Value": "$400"},
-    {"Manufacturer": "","Series": "Junkwaffel","Issue Number": 3,"Year": 1972,"Grade": "","Quantity": 2,"Value": "$200","Total Value": "$400"},
-    {"Manufacturer": "DDC","Series": "Action Comics","Issue Number": 338,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$415","Total Value": "$415"},
-    {"Manufacturer": "Marvel","Series": "World's Finest","Issue Number": 209,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$419","Total Value": "$419"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 61,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$425","Total Value": "$425"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 38,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$425","Total Value": "$425"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 185,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$425","Total Value": "$425"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 82,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$437","Total Value": "$437"},
-    {"Manufacturer": "Marvel","Series": "Strange Tales","Issue Number": 161,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$450","Total Value": "$450"},
-    {"Manufacturer": "Charleston Comics","Series": "Doomsday +1","Issue Number": 1,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$450","Total Value": "$450"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 187,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$450","Total Value": "$450"},
-    {"Manufacturer": "Marvel","Series": "Sub-Mariner","Issue Number": 31,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$475","Total Value": "$475"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 307,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$475","Total Value": "$475"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 119,"Year": 1980,"Grade": "","Quantity": 2,"Value": "$250","Total Value": "$500"},
-    {"Manufacturer": "Marvel","Series": "Captain America and the Falcon","Issue Number": 136,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
-    {"Manufacturer": "Archie Adventure Series","Series": "Adventures of The Fly","Issue Number": 10,"Year": 1961,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
-    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 27,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 265,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
-    {"Manufacturer": "Gold Key","Series": "Magnus Robot Fighter 4000 AD","Issue Number": 24,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$500","Total Value": "$500"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 175,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$525","Total Value": "$525"},
-    {"Manufacturer": "DC","Series": "Strange Adventures","Issue Number": 200,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$525","Total Value": "$525"},
-    {"Manufacturer": "Marvel","Series": "Star Trek","Issue Number": 3,"Year": 1980,"Grade": "","Quantity": 3,"Value": "$180","Total Value": "$540"},
-    {"Manufacturer": "Marvel","Series": "Marvel Super- Heroes","Issue Number": 21,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$550","Total Value": "$550"},
-    {"Manufacturer": "DC","Series": "Mustery in Space","Issue Number": 95,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$576","Total Value": "$576"},
-    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 31,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$600","Total Value": "$600"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 186,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$600","Total Value": "$600"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 180,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$600","Total Value": "$600"},
-    {"Manufacturer": "DC","Series": "Superboy","Issue Number": 143,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$606","Total Value": "$606"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 152,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$625","Total Value": "$625"},
-    {"Manufacturer": "Marvel","Series": "Fantastic Four","Issue Number": 238,"Year": 1981,"Grade": "","Quantity": 8,"Value": "$80","Total Value": "$640"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 304,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$650","Total Value": "$650"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 97,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$650","Total Value": "$650"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 146,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$660","Total Value": "$660"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 150,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$660","Total Value": "$660"},
-    {"Manufacturer": "","Series": "Mr Natural","Issue Number": 2,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$660","Total Value": "$660"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 236,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$700","Total Value": "$700"},
-    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 18,"Year": 1981,"Grade": "","Quantity": 9,"Value": "$80","Total Value": "$720"},
-    {"Manufacturer": "","Series": "The Fabulous Freak Brothers","Issue Number": 5,"Year": 1971,"Grade": "","Quantity": 2,"Value": "$360","Total Value": "$720"},
-    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 354,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$725","Total Value": "$725"},
-    {"Manufacturer": "Marvel","Series": "What If?","Issue Number": 34,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
-    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 356,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 196,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 10,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 235,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
+    {"Manufacturer": "Marvel","Series": "Team Up","Issue Number": 86,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
+    {"Manufacturer": "Marvel","Series": "Howard the Duck","Issue Number": 24,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 213,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
     {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 210,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$750","Total Value": "$750"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 4,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$775","Total Value": "$775"},
-    {"Manufacturer": "Marvel","Series": "Star Trek","Issue Number": 2,"Year": 1980,"Grade": "","Quantity": 6,"Value": "$130","Total Value": "$780"},
-    {"Manufacturer": "DC","Series": "DC Comics Presents","Issue Number": 26,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$800","Total Value": "$800"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 237,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$825","Total Value": "$825"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 93,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$837","Total Value": "$837"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 329,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$850","Total Value": "$850"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 29,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$875","Total Value": "$875"},
-    {"Manufacturer": "Marvel","Series": "Captain America Annual","Issue Number": 1,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$875","Total Value": "$875"},
-    {"Manufacturer": "","Series": "Mr Natural","Issue Number": 2,"Year": 1971,"Grade": "","Quantity": 1,"Value": "$900","Total Value": "$900"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 86,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$900","Total Value": "$900"},
-    {"Manufacturer": "DC","Series": "Metal Men","Issue Number": 37,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$950","Total Value": "$950"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 102,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$975","Total Value": "$975"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 311,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$1,000","Total Value": "$1,000"},
-    {"Manufacturer": "Marvel","Series": "The Mighty Avengers","Issue Number": 63,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$1,000","Total Value": "$1,000"},
-    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 87,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,000","Total Value": "$1,000"},
-    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 1,"Year": 1981,"Grade": "","Quantity": 9,"Value": "$120","Total Value": "$1,080"},
-    {"Manufacturer": "Marvel","Series": "The Avengers Annual (Newstand editiion)","Issue Number": 1,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$1,100","Total Value": "$1,100"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 188,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$1,149","Total Value": "$1,149"},
-    {"Manufacturer": "DC","Series": "The Joker","Issue Number": 1,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$1,200","Total Value": "$1,200"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 232,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$1,200","Total Value": "$1,200"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 94,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$1,250","Total Value": "$1,250"},
-    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 22,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 419,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
-    {"Manufacturer": "DC","Series": "BATMAN","Issue Number": 253,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 190,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$1,300","Total Value": "$1,300"},
-    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 105,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$1,380","Total Value": "$1,380"},
-    {"Manufacturer": "Gold Key","Series": "Doctor Solar Man of the Atom","Issue Number": 23,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,400","Total Value": "$1,400"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 4,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,405","Total Value": "$1,405"},
-    {"Manufacturer": "DC","Series": "Wonder Woman","Issue Number": 178,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,440","Total Value": "$1,440"},
-    {"Manufacturer": "Marvel","Series": "The Invincible Iron Man","Issue Number": 126,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$1,499","Total Value": "$1,499"},
-    {"Manufacturer": "Blue Beetle","Series": "Blue Beetle","Issue Number": 2,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$1,550","Total Value": "$1,550"},
-    {"Manufacturer": "Gold Key","Series": "Star Trek","Issue Number": 13,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$1,550","Total Value": "$1,550"},
-    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 39,"Year": 1980,"Grade": "","Quantity": 10,"Value": "$160","Total Value": "$1,600"},
-    {"Manufacturer": "Marvel","Series": "The Mighty Thor Annual","Issue Number": 2,"Year": 1966,"Grade": "","Quantity": 1,"Value": "$1,800","Total Value": "$1,800"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 103,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$1,900","Total Value": "$1,900"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 102,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$1,900","Total Value": "$1,900"},
-    {"Manufacturer": "Marvel","Series": "The Avengers Annual (Newstand editiion)","Issue Number": 10,"Year": 1981,"Grade": "","Quantity": 3,"Value": "$975","Total Value": "$2,925"},
-    {"Manufacturer": "DC","Series": "Batman","Issue Number": 220,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$2,000","Total Value": "$2,000"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 113,"Year": 1969,"Grade": "","Quantity": 1,"Value": "$2,000","Total Value": "$2,000"},
-    {"Manufacturer": "Marvel","Series": "Dazzler","Issue Number": 3,"Year": 1981,"Grade": "","Quantity": 5,"Value": "$130","Total Value": "$650"},
-    {"Manufacturer": "DC","Series": "The Untold Legend of the Batman","Issue Number": 1,"Year": 1980,"Grade": "","Quantity": 11,"Value": "$210","Total Value": "$2,310"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 68,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$2,340","Total Value": "$2,340"},
-    {"Manufacturer": "Marvel","Series": "Fantastic Four","Issue Number": 41,"Year": 1961,"Grade": "","Quantity": 1,"Value": "$2,500","Total Value": "$2,500"},
-    {"Manufacturer": "DC","Series": "Detective Comics","Issue Number": 362,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$2,629","Total Value": "$2,629"},
-    {"Manufacturer": "Marvel","Series": "Conan the Barbarian","Issue Number": 100,"Year": 1979,"Grade": "","Quantity": 32,"Value": "$120","Total Value": "$3,840"},
-    {"Manufacturer": "Marvel","Series": "Star Wars","Issue Number": 1,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$2,700","Total Value": "$2,700"},
-    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 85,"Year": 1963,"Grade": "","Quantity": 1,"Value": "$2,880","Total Value": "$2,880"},
-    {"Manufacturer": "DC","Series": "Batman","Issue Number": 199,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$2,900","Total Value": "$2,900"},
-    {"Manufacturer": "","Series": "Feds 'N' Heads","Issue Number": 1,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$2,900","Total Value": "$2,900"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spiderman","Issue Number": 218,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$3,000","Total Value": "$3,000"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 190,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$3,000","Total Value": "$3,000"},
-    {"Manufacturer": "Marvel","Series": "Nick Fury Agent of Sheild","Issue Number": 4,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$3,500","Total Value": "$3,500"},
-    {"Manufacturer": "Marvel","Series": "The Cat","Issue Number": 1,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$3,700","Total Value": "$3,700"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 85,"Year": 0,"Grade": "","Quantity": 1,"Value": "$4,000","Total Value": "$4,000"},
-    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 16,"Year": 1982,"Grade": "","Quantity": 117,"Value": "$40","Total Value": "$4,680"},
-    {"Manufacturer": "","Series": "The Fabulous Freak Brothers","Issue Number": 1,"Year": 1971,"Grade": "","Quantity": 3,"Value": "$1,700","Total Value": "$5,100"},
-    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 142,"Year": 1981,"Grade": "","Quantity": 15,"Value": "$375","Total Value": "$5,625"},
-    {"Manufacturer": "Marvel","Series": "Captain Marvel","Issue Number": 1,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$6,000","Total Value": "$6,000"},
-    {"Manufacturer": "Marvel","Series": "Uncanny X-men","Issue Number": 155,"Year": 1982,"Grade": "","Quantity": 37,"Value": "$170","Total Value": "$6,290"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 114,"Year": 1969,"Grade": "","Quantity": 2,"Value": "$3,600","Total Value": "$7,200"},
-    {"Manufacturer": "Marvel","Series": "The Uncanny X-Men","Issue Number": 141,"Year": 1981,"Grade": "","Quantity": 8,"Value": "$900","Total Value": "$7,200"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 59,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$7,500","Total Value": "$7,500"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 198,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$8,000","Total Value": "$8,000"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 29,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 30,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 32,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 35,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$280","Total Value": "$280"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 36,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$260","Total Value": "$260"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 206,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 37,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 38,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$425","Total Value": "$425"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 39,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 40,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 41,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 52,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$200","Total Value": "$200"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 55,"Year": 1977,"Grade": "","Quantity": 2,"Value": "$140","Total Value": "$280"},
     {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 198,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$8,400","Total Value": "$8,400"},
-    {"Manufacturer": "Marvel","Series": "Wolverine Limited Series","Issue Number": 1,"Year": 1982,"Grade": "","Quantity": 2,"Value": "$15,500","Total Value": "$31,000"},
-    {"Manufacturer": "Marvel","Series": "The Uncanny X-men","Issue Number": 156,"Year": 1982,"Grade": "","Quantity": 16,"Value": "$3,100","Total Value": "$49,600"},
-    {"Manufacturer": "Marvel","Series": "The Mighty Thor","Issue Number": 249,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "Ironman","Issue Number": 128,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$975","Total Value": "1000"},
-    {"Manufacturer": "Marvel","Series": "The Mighty Thor","Issue Number": 298,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
-    {"Manufacturer": "DC","Series": "The New Teen Titans","Issue Number": 1,"Year": 1984,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Marvel","Series": "The Mighty Thor","Issue Number": 378,"Year": 1987,"Grade": "","Quantity": 2,"Value": "$120","Total Value": "$240"},
-    {"Manufacturer": "Marvel","Series": "Marvel Tales","Issue Number": 48,"Year": 1973,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "2001: A Space Odyssey","Issue Number": 1,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
-    {"Manufacturer": "Marvel","Series": "The Incredible Hulk Annual","Issue Number": 7,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$375","Total Value": "$375"},
-    {"Manufacturer": "Marvel","Series": "Super Villian Team Up","Issue Number": 5,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$675","Total Value": "$675"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 194,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 192,"Year": 1980,"Grade": "","Quantity": 2,"Value": "$90","Total Value": "$180"},
-    {"Manufacturer": "Marvel","Series": "The Avengers","Issue Number": 190,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$90","Total Value": "$90"},
-    {"Manufacturer": "Marvel","Series": "Peter Parker the spectacular Spider-Man","Issue Number": 44,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$45","Total Value": "$45"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 75,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$47","Total Value": "$47"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 72,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$46","Total Value": "$46"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 69,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "","Series": "Steel Grip Starkey","Issue Number": 1,"Year": 1986,"Grade": "","Quantity": 1,"Value": "$45","Total Value": "$45"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 77,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 80,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "Eclipse","Series": "Crossfire","Issue Number": 1,"Year": 1984,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 79,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$25","Total Value": "$25"},
-    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 68,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "DC","Series": "Action Comics","Issue Number": 480,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
-    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 22,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "Gold Key","Series": "Flash Gordon","Issue Number": 21,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "DC","Series": "Adam Strange Adventures","Issue Number": 224,"Year": 1970,"Grade": "","Quantity": 1,"Value": "$245","Total Value": "$245"},
-    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 88,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "DC","Series": "Superman","Issue Number": 305,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "Marvel","Series": "Captain America","Issue Number": 400,"Year": 1992,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "DC","Series": "The Untold Legend of the Batman","Issue Number": 0,"Year": 0,"Grade": "","Quantity": 0,"Value": "","Total Value": "$0"},
-    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 85,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "Marvel","Series": "Marvel Team Up","Issue Number": 85,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
-    {"Manufacturer": "DC","Series": "World's Finest","Issue Number": 212,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
-    {"Manufacturer": "Marvel","Series": "Spiderman","Issue Number": 15,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$40","Total Value": "$40"},
-    {"Manufacturer": "DC","Series": "World of Krypton","Issue Number": 1,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
-    {"Manufacturer": "DC","Series": "DC Comics Presents","Issue Number": 17,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$60","Total Value": "$60"},
-    {"Manufacturer": "DC","Series": "Batman Versus Predator","Issue Number": 1,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$70","Total Value": "$70"},
-    {"Manufacturer": "DC","Series": "Batman Versus Predator","Issue Number": 2,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$65","Total Value": "$65"},
-    {"Manufacturer": "DC","Series": "Krypton Chronicles","Issue Number": 1,"Year": 1981,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
-    {"Manufacturer": "DC","Series": "Batman Versus Predator","Issue Number": 3,"Year": 1991,"Grade": "","Quantity": 1,"Value": "$48","Total Value": "$48"},
-    {"Manufacturer": "DC","Series": "Sttrange Adventures","Issue Number": 203,"Year": 1967,"Grade": "","Quantity": 1,"Value": "$121","Total Value": "$121"},
-    {"Manufacturer": "DC","Series": "Superboy","Issue Number": 39,"Year": 1982,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
-    {"Manufacturer": "Marvel","Series": "The Mighty Thor","Issue Number": 204,"Year": 1972,"Grade": "","Quantity": 1,"Value": "$1,100","Total Value": "$1,100"},
-    {"Manufacturer": "DC","Series": "Manhunter","Issue Number": 1,"Year": 1975,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider Man","Issue Number": 160,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$1,000","Total Value": "$1,000"},
-    {"Manufacturer": "Marvel","Series": "The Amazing Spider Man","Issue Number": 203,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$215","Total Value": "$215"},
-    {"Manufacturer": "Marvel","Series": "The Incredible Hulk","Issue Number": 238,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
-    {"Manufacturer": "DC","Series": "The New Blackhawk","Issue Number": 244,"Year": 1976,"Grade": "","Quantity": 1,"Value": "$40","Total Value": "$40"},
-    {"Manufacturer": "Marvel","Series": "The Amzing Spider Man","Issue Number": 192,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$2,750","Total Value": "$2,750"}
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 57,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 58,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$115","Total Value": "$115"},
+    {"Manufacturer": "Mavel","Series": "The Amazing Spider-Man","Issue Number": 199,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$190","Total Value": "$190"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 59,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$130","Total Value": "$130"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 60,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$120","Total Value": "$120"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 193,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$182","Total Value": "$182"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 61,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$140","Total Value": "$140"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 56,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$55","Total Value": "$55"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 190,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$3,000","Total Value": "$3,000"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 62,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$170","Total Value": "$170"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 64,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$110","Total Value": "$110"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 187,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$450","Total Value": "$450"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 65,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 66,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$240","Total Value": "$240"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 68,"Year": 1978,"Grade": "","Quantity": 1,"Value": "$80","Total Value": "$80"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 172,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$300","Total Value": "$300"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 73,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$79","Total Value": "$79"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 76,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$50","Total Value": "$50"},
+    {"Manufacturer": "Marvel","Series": "The Amazing Spider-Man","Issue Number": 85,"Year": 0,"Grade": "","Quantity": 1,"Value": "$4,000","Total Value": "$4,000"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 78,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$47","Total Value": "$47"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 81,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$72","Total Value": "$72"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 87,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$42","Total Value": "$42"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 99,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$180","Total Value": "$180"},
+    {"Manufacturer": "Marvel","Series": "The Defenders","Issue Number": 100,"Year": 1979,"Grade": "","Quantity": 1,"Value": "$95","Total Value": "$95"},
+    {"Manufacturer": "Marvel","Series": "The Avengers Annual (Newstand editiion)","Issue Number": 10,"Year": 1981,"Grade": "","Quantity": 2,"Value": "$975","Total Value": "$1,950"},
+    {"Manufacturer": "Marvel","Series": "Dr. Strange","Issue Number": 43,"Year": 1980,"Grade": "","Quantity": 1,"Value": "$100","Total Value": "$100"},
+    {"Manufacturer": "Marvel","Series": "Fantastic Four","Issue Number": 41,"Year": 1961,"Grade": "","Quantity": 1,"Value": "$2,500","Total Value": "$2,500"},
+    {"Manufacturer": "Marvel","Series": "The Eternals","Issue Number": 17,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$90","Total Value": "$90"},
+    {"Manufacturer": "Marvel","Series": "The Eternals","Issue Number": 18,"Year": 1977,"Grade": "","Quantity": 1,"Value": "$250","Total Value": "$250"},
+    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 93,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$837","Total Value": "$837"},
+    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 94,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$1,250","Total Value": "$1,250"},
+    {"Manufacturer": "DC","Series": "Mustery in Space","Issue Number": 95,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$576","Total Value": "$576"},
+    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 97,"Year": 1964,"Grade": "","Quantity": 1,"Value": "$650","Total Value": "$650"},
+    {"Manufacturer": "DC","Series": "Mystery in Space","Issue Number": 102,"Year": 1965,"Grade": "","Quantity": 1,"Value": "$1,900","Total Value": "$1,900"},
+    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 83,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$160","Total Value": "$160"},
+    {"Manufacturer": "DC","Series": "Lois Lane","Issue Number": 87,"Year": 1968,"Grade": "","Quantity": 1,"Value": "$1,000","Total Value": "$1,000"}
         ];
 
         let tbody = document.querySelector("tbody");
 
         function renderTable() {
-            tbody.innerHTML = "";
+            tbody.innerHTML = ""; // Clear existing rows
+            let totalValue = 0;
             comics.forEach(comic => {
                 let row = tbody.insertRow();
-                Object.values(comic).forEach(text => {
+                Object.values(comic).forEach((text, index) => {
                     let cell = row.insertCell();
                     cell.textContent = text || "N/A";
+                    if (index === 7) { // "Total Value" column
+                        totalValue += parseFloat(text.replace('$', '').replace(',', ''));
+                    }
                 });
             });
-        }
-
-        function searchTable() {
-            let input = document.getElementById("search").value.toLowerCase();
-            let rows = tbody.getElementsByTagName("tr");
-            for (let row of rows) {
-                let txtValue = row.textContent || row.innerText;
-                row.style.display = txtValue.toLowerCase().includes(input) ? "" : "none";
-            }
+            document.getElementById("totalValue").textContent = `Total Collection Value: $${totalValue.toFixed(2)}`;
         }
 
         renderTable();
+
+        function searchTable() {
+            let input = document.getElementById("search");
+            let filter = input.value.toLowerCase();
+            let rows = tbody.getElementsByTagName("tr");
+            for (let row of rows) {
+                let txtValue = row.textContent || row.innerText;
+                row.style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+            }
+        }
+
+        function sortTable(n) {
+            let rows = Array.from(tbody.rows);
+            let ascending = tbody.rows[0].cells[n].getAttribute("data-order") !== "asc";
+            rows.sort((a, b) => {
+                let x = a.cells[n].innerText;
+                let y = b.cells[n].innerText;
+
+                if (n === 6 || n === 7) { // For "Value" and "Total Value" columns (numeric values)
+                    x = parseFloat(x.replace('$', '').replace(',', ''));
+                    y = parseFloat(y.replace('$', '').replace(',', ''));
+                }
+
+                return ascending ? (x > y ? 1 : -1) : (x < y ? 1 : -1);
+            });
+            rows.forEach(row => tbody.appendChild(row));
+            tbody.rows[0].cells[n].setAttribute("data-order", ascending ? "asc" : "desc");
+        }
+
+        function checkPassword() {
+            let inputPassword = document.getElementById("passwordInput").value;
+            if (inputPassword === _0x5398) {
+                document.getElementById("passwordPrompt").style.display = "none";
+                document.getElementById("content").style.display = "block";
+                renderTable(); // Re-render the table after showing content
+            } else {
+                alert("Incorrect password. Try again.");
+            }
+        }
     </script>
+
 </body>
 </html>
